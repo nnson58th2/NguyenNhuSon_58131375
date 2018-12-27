@@ -199,8 +199,8 @@ void searchByName(){
 
 int main() {
 	addContact();
-//	showFileContact();
-//	searchByName();
-//	editByName();
-//	deleteByPhone();
+	showFileContact();
+	searchByName();
+	editByName();
+	deleteByPhone();
 }

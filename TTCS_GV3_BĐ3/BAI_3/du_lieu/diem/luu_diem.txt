@@ -1,0 +1,3 @@
+Son	20
+Suong	20
+Teo	25
