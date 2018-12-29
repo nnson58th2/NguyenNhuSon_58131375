@@ -55,7 +55,48 @@ void showTheGraph(int a[10][10]){
 	}		
 }
 
-int Dijkstra(int a[10][10], int n) {
+// Ham kiem tra dieu kien gan bien phu cho bien chinh
+void Compare(saveVariable &vc, saveVariable &vp) {
+	if (vc.flag != 1) {
+		if (vc.sum == 0) {
+			vc.name = vp.name;
+			vc.sum = vp.sum;
+		} else {
+			if (vp.sum != 0 && vc.sum > vp.sum) {
+				vc.name = vp.name;
+				vc.sum = vp.sum;
+			}
+		}
+	}
+}
+
+// Chon diem cho tong nho nhat - du co len
+void Browser(saveVariable vc[10], int &index, int n) {
+	int print = 1000;
+	
+	for (int i = 0; i < n; i++) {	
+		if (vc[i].flag != 1 && vc[i].sum != 0) {
+			if (vc[i].sum < print) {
+				index = i;
+				print = vc[i].sum;
+			}
+		}
+	}
+	vc[index].flag = 1;	// Tra ve gia tri hang cho lan duyet ma tran tiep theo
+}
+
+// Hien thi ra lo trinh duong di ngan nhat tu mang
+void Router(saveVariable a[10], int x, int y) {
+	cout << "Do dai duong di ngan nhat: " << a[y].sum << endl;
+	cout << "Lo trinh: " << y;
+	
+	while (y != x) {
+		y = a[y].name;
+		cout << "<-- " << y;
+	}
+}
+
+int findTheWay(int a[10][10], int n) {
 	saveVariable vc[n];
 	saveVariable vp;
 	
@@ -89,17 +130,19 @@ int Dijkstra(int a[10][10], int n) {
 			Compare(vc[j], vp);
 			
 			// Xuat ra qua trinh thay doi gia tri cua mang vc 
-			for (int k = 0; k < n; k++) {\
-				cout << vc[k].name << "," << vc[k].sum << "/t";
+			for (int k = 0; k < n; k++) {
+				cout << vc[k].name << "," << vc[k].sum << "\t";
 			}
 			cout << endl;
 			
 			// Danh dau lai vi tri da di qua
-			Browser(vc, itemS);
+			Browser(vc, itemS, n);
 			
 			i = itemS; // Chi so den hang tiep theo de doc tiep ma tran
 		}
 	} while(itemS != itemE);
+	
+	cout << "--------------------------------------------" << endl;
 	
 	// Hien thi ra lo trinh duong di
 	Router(vc, itemS, itemE);
@@ -113,8 +156,7 @@ int main(){
 
 	readTheGraph(a, n);
 	showTheGraph(a);
-	
-	cout << "--------------------";
-	
-	Dijkstra(a, n);
+	cout << "--------------------------" << endl;
+	cout << "Qua trinh thay doi gia tri" << endl;
+	findTheWay(a, n);
 }
