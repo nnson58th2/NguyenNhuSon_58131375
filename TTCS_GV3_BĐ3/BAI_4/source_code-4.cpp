@@ -1,17 +1,29 @@
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
 
 using namespace std;
 
+// Khai báo c?u trúc luu bi?n
 struct saveVariable {
-	int name;
-	int sum;
-	int flag;
+	int name;   // Tên
+	int sum;    // T?ng
+	int flag;   // Cái c?
 };
 
-fstream fi;
-int n;
+void ImportTheGraph(int a[10][10], int &n);  // Hàm nh?p d? th?
+void writeTheGraph(int a[10][10], int &n);   // Hàm xu?t d? thi ra file
+void readTheGraph(int a[10][10], int &n);    // Hàm d?c d? th? t? file
+void showTheGraph(int a[10][10], int n);    // Hàm hi?n th? ma tr?n
+void Compare(saveVariable &vc, saveVariable &vp); // Hàm so sánh ki?m tra bi?n
+void Browser(saveVariable vc[10], int &index, int n);   // Hàm duy?t ma tr?n ch?n di?m có t?ng nh? nh?t
+void Router(saveVariable a[10], int x, int y); // Hàm hi?n th? ra du?ng di ng?n nh?t t? m?ng ma tr?n
+void findTheWay(int a[10][10], int n);  // Hàm tìm du?ng di ng?n nh?t
+int main(); // Hàm chính
 
+fstream fi;
+
+// Hàm nh?p d? thi có d?ng ma tr?n
 void ImportTheGraph(int a[10][10], int &n) {
 	cout << "Nhap so dinh: ";
 	cin >> n;
@@ -23,8 +35,8 @@ void ImportTheGraph(int a[10][10], int &n) {
 	}
 }
 
-// Ghi ma tran vao trong file
-void writeTheGraph(int a[10][10], int &n){
+// Ghi ma tr?n vào trong file
+void writeTheGraph(int a[10][10], int &n) {
 	fi.open("du_lieu/do_thi.txt", ios::out);
 	fi << n;
 	fi << endl;
@@ -36,8 +48,8 @@ void writeTheGraph(int a[10][10], int &n){
 	fi.close();
 }
 
-// Doc ma tran trong file ra mang
-void readTheGraph(int a[10][10], int &n){
+// Ð?c ma tr?n trong file ra m?ng
+void readTheGraph(int a[10][10], int &n) {
 	fi.open("du_lieu/do_thi.txt", ios::in);
 	fi >> n;
 	for(int i = 0; i < n; i++)
@@ -46,16 +58,16 @@ void readTheGraph(int a[10][10], int &n){
 	fi.close();
 }
 
-// Xuat du lieu mang
-void showTheGraph(int a[10][10]){
-	for(int i = 0; i < n; i++){
-		for(int j = 0; j < n; j++)
+// Xu?t m?ng ma tr?n
+void showTheGraph(int a[10][10], int n) {
+	for (int i = 0; i < n; i++){
+		for (int j = 0; j < n; j++)
 			cout << a[i][j] << " ";
 		cout << endl;
 	}		
 }
 
-// Ham kiem tra dieu kien gan bien phu cho bien chinh
+// Hàm ki?m tra di?u ki?n - gán bi?n ph? cho bi?n chính
 void Compare(saveVariable &vc, saveVariable &vp) {
 	if (vc.flag != 1) {
 		if (vc.sum == 0) {
@@ -70,7 +82,7 @@ void Compare(saveVariable &vc, saveVariable &vp) {
 	}
 }
 
-// Chon diem cho tong nho nhat - du co len
+// Ch?n di?m có t?ng nh? nh?t và d?ng c? lên
 void Browser(saveVariable vc[10], int &index, int n) {
 	int print = 1000;
 	
@@ -82,81 +94,91 @@ void Browser(saveVariable vc[10], int &index, int n) {
 			}
 		}
 	}
-	vc[index].flag = 1;	// Tra ve gia tri hang cho lan duyet ma tran tiep theo
+	vc[index].flag = 1;	// Tr? v? giá tr? hàng cho l?n duy?t ma tr?n ti?p theo
 }
 
-// Hien thi ra lo trinh duong di ngan nhat tu mang
-void Router(saveVariable a[10], int x, int y) {
+// Hi?n th? ra l? trình du?ng di ng?n nh?t t? m?ng ma tr?n (saveVariable)
+void Router(saveVariable a[10], int x, int y){
 	cout << "Do dai duong di ngan nhat: " << a[y].sum << endl;
-	cout << "Lo trinh: " << y;
+	cout << "lo trinh:  " << y;
 	
-	while (y != x) {
+	while(y != x){
 		y = a[y].name;
-		cout << "<-- " << y;
+		cout << " <-- " << y;
 	}
 }
 
-int findTheWay(int a[10][10], int n) {
+// Tìm du?ng di ng?n nh?t
+void findTheWay(int a[10][10], int n) {
 	saveVariable vc[n];
 	saveVariable vp;
 	
-	vp.flag = 0;
+    int start, end;
+    
+    vp.flag = 0;    // C? n?m
 	
-	// Khoi tao hang dau tien
+	// Kh?i t?o cho hàng d?u tiên
 	for (int i = 0; i < n; i++) {
 		vc[i].name = 0;
 		vc[i].sum = 0;
 		vc[i].flag = 0;
 	}
 	
-	int itemS = 0;	// Vi tri bat dau la 0
-	int itemE = n - 1;	// Vi tri ket thu la so diem - 1
-	int i = itemS;	// Doc ma tran tu hang dau tien - Vi tri bat dau
+	cout << "Nhap diem bat dau di: ";
+    cin >> start;
+    cout << "Nhap diem ket thuc di: ";
+    cin >> end;
+    cout << "--------------------------" << endl;
+	cout << "Qua trinh thay doi gia tri" << endl;
 	
-	// Bat co, danh dau vi tri ban dau
+	int itemS = start;	// V? trí b?t d?u
+	int itemE = end;	// V? trí k?t thúc
+	int i = itemS;	// Ð?c ma tr?n t? hàng d?u(itemS) - V? trí b?t d?u tìm du?ng
+	
+    // B?t c? , dánh d?u v? trí ban d?u
 	vc[itemS].flag = 1;
 	
 	do {
 		for (int j = 0; j < n; j++) {
-			// Gan cho bien phu cai ten va gia tri tong
+            // Gán cho bi?n ph? cái tên và giá tr? t?ng
 			if (a[i][j] != 0) {
 				vp.name = itemS;
 				vp.sum = a[i][j] + vc[itemS].sum;
 			} else {
-				// Xu ly gia tri cua ma tran tai hang i cot j khi bang 0
+                // X? lý giá tr? c?a ma tr?n t?i hàng i c?t j khi giá tr? b?ng 0
 				vp.name = 0;
 				vp.sum = 0;
 			}
-			Compare(vc[j], vp);
-			
-			// Xuat ra qua trinh thay doi gia tri cua mang vc 
-			for (int k = 0; k < n; k++) {
-				cout << vc[k].name << "," << vc[k].sum << "\t";
-			}
-			cout << endl;
-			
-			// Danh dau lai vi tri da di qua
-			Browser(vc, itemS, n);
-			
-			i = itemS; // Chi so den hang tiep theo de doc tiep ma tran
-		}
+            Compare(vc[j], vp);
+        }
+        // Xu?t ra quá trình thay d?i giá tr? c?a m?ng vc 
+        for (int k = 0; k < n; k++) {
+            cout << vc[k].name << "," << vc[k].sum << "\t";
+        }
+        cout << endl;
+        
+        // Ðánh d?u l?i v? trí dã di qua
+        Browser(vc, itemS, n);
+        
+        i = itemS; // Ðua i d?n hàng ti?p theo d? d?c ti?p ma tr?n	
 	} while(itemS != itemE);
 	
 	cout << "--------------------------------------------" << endl;
-	
-	// Hien thi ra lo trinh duong di
-	Router(vc, itemS, itemE);
+
+    // Hi?n th? ra l? trình du?ng di
+	Router(vc, start, end);
 }
 
+// Hàm chính
 int main(){
 	int a[10][10];
+    int n;
 	
 //	ImportTheGraph(a, n);
 //	writeTheGraph(a, n);
 
 	readTheGraph(a, n);
-	showTheGraph(a);
-	cout << "--------------------------" << endl;
-	cout << "Qua trinh thay doi gia tri" << endl;
+	showTheGraph(a, n);
+	cout << "------------" << endl;
 	findTheWay(a, n);
 }
