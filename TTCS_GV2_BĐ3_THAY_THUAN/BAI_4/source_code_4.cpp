@@ -2,19 +2,25 @@
 #include <conio.h>
 #include <stdlib.h>
 #include <iostream>
-#define	input "mang_du_lieu.txt"
-#define	out1 "du_lieu_1.txt"
-#define	out2 "du_lieu_2.txt"
+#define	input "du_lieu/mang_du_lieu.txt"
+#define	out1 "du_lieu/du_lieu_1.txt"
+#define	out2 "du_lieu/du_lieu_2.txt"
 using namespace std;
 
 void readFile();	// Hàm doc du lieu tu file
 void writeFile();	// Hàm ghi du lieu vào file
 void XuatFile(FILE *f, char duongdan[]);	// Hàm xuat du lieu file ra man hình
-void Tach(FILE *f0, FILE *f1, FILE *f2, int x);	// Hàm tách file du lieu chinh thành file du lieu phu
-void Tron(FILE *f0, FILE *f1, FILE *f2, int tam);	// Hàm tron 2 du lieu phu vao file du lieu tam
+void tachTrucTiep(FILE *f0, FILE *f1, FILE *f2, int x);	// Hàm tách file du lieu chinh thành file du lieu phu
+void tronTrucTiep(FILE *f0, FILE *f1, FILE *f2, int tam);	// Hàm tron truc tiep 2 du lieu phu vao file du lieu tam
+void tachTuNhien(FILE *f0, FILE *f1, FILE *f2); // Hàm tách file du lieu chinh thanh file du lieu phu
+void tronTuNhien();	// Hàm tron tu nhien các run f1, f2 vào f0
+void CopyRun(FILE *f0, FILE	*f1);	// Hàm chép 1 run tu f0 vào f1
+void TronRun();	// Hàm tron 1 tun f2 và f2 vao f0
+void Copy(FILE *f0, FILE *f1);	// Hàm chép 1 phan tu tu file f0 ghi vao file f1
 
 FILE *f0, *f1, *f2;
-int n, x = 1;
+int n, x = 1, items, k, y, x1, x2;;
+int Error;
 
 int main() {
 	int i = 1;
@@ -24,7 +30,7 @@ int main() {
 	XuatFile(f0, input);
 	
 	while (x < n) {
-		Tach(f0, f1, f2, x);
+		tachTrucTiep(f0, f1, f2, x);
 		
 		cout << endl << "--------------------------------------------" << endl;
 		cout << "Du lieu file F1 lan " << i << ": ";
@@ -33,7 +39,7 @@ int main() {
 		cout << endl << "Du lieu file F2 lan " << i  << ": ";
 		XuatFile(f2, out2);  
 		
-		Tron(f0, f1, f2, x);
+		tronTrucTiep(f0, f1, f2, x);
 		cout << endl << "File du lieu sau khi tron lan " << i << ": ";
 		XuatFile(f0, input); 
 		
@@ -42,14 +48,14 @@ int main() {
 	}
 }
 
-// Doc du lieu tu file vao
+// Tao file du lieu tu gom n phan tu
 void readFile() {
 	int tam;
 	FILE *f;
-	f = fopen("mang_du_lieu.txt", "wt");
+	f = fopen("du_lieu/mang_du_lieu.txt", "wt");
 	
 	if(f == NULL) {
-		printf("Khong co du lieu trong file!");
+		printf("Khong co du lieu tron file!");
 	} 
 	
 	printf("Nhap n so phan tu: "); 	
@@ -82,8 +88,10 @@ void XuatFile(FILE *f, char duongdan[]) {
 	fclose(f); 
 }
 
+/*TRON TRUC TIEP*/
+
 // Tách file du lieu chinh sang file du lieu phu
-void Tach(FILE *f0, FILE *f1, FILE *f2, int x) {
+void tachTrucTiep(FILE *f0, FILE *f1, FILE *f2, int x) {
 	int dem, tam;
 	
 	f0 = fopen(input, "rt");
@@ -114,13 +122,13 @@ void Tach(FILE *f0, FILE *f1, FILE *f2, int x) {
 	fclose(f2);  
 }
 
-// Tron x phan tu tren f1 va x phan tu tren f2 thanh 2x phan tu tren f0 den khi f1 hay f2 ket thuc
-void Tron(FILE *f0, FILE *f1, FILE *f2, int tam) {
+// tronTrucTiep x phan tu tren f1 va x phan tu tren f2 thanh 2x phan tu tren f0 den khi f1 hay f2 ket thuc
+void tronTrucTiep(FILE *f0, FILE *f1, FILE *f2, int tam) {
 	int	stop, x, y, l, r;
 	
-	f0 = fopen("mang_du_lieu.txt","wt"); 	
-	f1 = fopen("du_lieu_1.txt","rt"); 	
-	f2 = fopen("du_lieu_2.txt","rt");
+	f0 = fopen("du_lieu/mang_du_lieu.txt","wt"); 	
+	f1 = fopen("du_lieu/du_lieu_1.txt","rt"); 	
+	f2 = fopen("du_lieu/du_lieu_2.txt","rt");
 	
 	while ((!feof(f1))&& (!feof(f2))) {
 		l = 0;	// So phan tu cua f1 da ghi len f0
@@ -195,3 +203,89 @@ void Tron(FILE *f0, FILE *f1, FILE *f2, int tam) {
 	fclose(f1);
 	fclose(f2); 
 }
+
+/*TRON TU NHIEN*/
+
+// Doc 1 phan tu tu file f0 ghi vao file f1
+void Copy(FILE *f0, FILE *f1) {	
+	fscanf(f0, "%3d", &k);
+	fprintf(f1, "%3d", k);
+
+	if  (!feof(f0)) {	
+		fscanf(f0, "%d", &y);		// Doc tu fle vao bien 
+		long curpos = ftell(f0) - 2;
+		fseek(f0, curpos, SEEK_SET);
+	}
+	
+	if (feof(f0)) 
+		Error = 1;  // Error == 1 neu het run tren f0 hoac het f0
+	else  
+		Error = (k > y) ? 1 : 0;	// Gap 1 so y nho hon x thi het run
+}
+
+// Chép 1 run tu f0 vào f1
+void CopyRun(FILE *f0, FILE	*f1) {
+	do
+		Copy(f0, f1);
+	while(!Error);
+}
+
+// Tron 1 run cua f2 và f2 va f0
+void TronRun() {
+	do {
+		fscanf(f1, "%d", &x1);		//doc tu fle vao bien 
+		int curpos = ftell(f1) - 2;
+		fseek(f1, curpos, SEEK_SET);
+		
+		fscanf(f2, "%d", &x2);		//doc tu fle vao bien 
+		 	curpos = ftell(f2) - 2;
+		fseek(f2, curpos, SEEK_SET);	
+		
+		if(x1 <= x2) {
+			Copy(f1, f0);
+			if (Error) 
+				CopyRun(f2, f0);
+		} else {
+			Copy(f2, f0);
+			if (Error) 
+			CopyRun(f1, f0);
+		}			
+	} while(!Error);
+}
+
+//
+void tachTuNhien(FILE *f0, FILE	*f1, FILE *f2) {
+	do {
+		CopyRun(f0, f1);
+		
+		if (!feof(f0))  
+			CopyRun(f0, f2);
+
+	} while (!feof(f0));
+		
+	fclose(f0);	 
+	fclose(f1);		
+	fclose(f2);	
+}
+
+// Tron các run cua f1 và f2 vào f0
+void tronTuNhien() {
+	while ((!feof(f1)) && (!feof(f2))) {
+		TronRun();
+		items++;
+	}
+	
+	while (!feof(f1)) {
+		CopyRun(f1, f0);
+		items++;	
+	}
+	
+	while (!feof(f2)) {
+		CopyRun(f2, f0);
+		items++;
+	}
+	
+	fclose(f0);	 
+	fclose(f1);		
+	fclose(f2);		
+}	
