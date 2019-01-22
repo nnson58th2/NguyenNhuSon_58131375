@@ -1,0 +1,22 @@
+Nhan vien van phong 1
+Ho ten: Thai
+Gioi tinh: Nam
+Ngay lam viec: 15.09.2017
+So con: 1
+So ngay vang: 9
+Tien luong: 2650
+Tien thuong: 2000000
+Tien phat: 1350
+Tien tro cap: 200000
+-----------------------------------
+Nhan vien van phong 2
+Ho ten: Thuy
+Gioi tinh: Nu
+Ngay lam viec: 19.11.2016
+So con: 2
+So ngay vang: 5
+Tien luong: 4375
+Tien thuong: 3000000
+Nhan vien khong bi phat
+Tien tro cap: 600000
+-----------------------------------

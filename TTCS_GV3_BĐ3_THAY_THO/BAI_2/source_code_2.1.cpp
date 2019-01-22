@@ -5,37 +5,44 @@
 #include<string.h> 
 using namespace std;
     
-// Khai b�o c?u tr�c ng�y th�ng
+// Khai báo cấu trúc ngày tháng
 struct DATE {
     int day;
     int month;
     int year;
 };
-    
-// G�n c?ng m?t m?ng gi� tr? th�ng tuong ?ng
+
+// Gán cứng một mảng giá trị tháng tương ứng    
 int Month[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    
-// H�m t?o ng�y th�ng du?c c?t t? chu?i nh?p v�o
+
+void Create(DATE &d, string &st);   // Hàm tạo ngày tháng được cắt từ chuổi nhập vào
+void printDate(int n, int sum); // Hàm in ngày tháng ra màn hình console
+int checkYear(DATE y);  // Hàm kiểm tra năm có phải là nhuận hay không
+int calculateDayInYear(DATE n); // Hàm tính số ngày trong năm
+void sumDate(DATE n, int tmp);  // Hàm cộng ngày tháng
+void subDate(DATE n, int tmp);  // Hàm trừ ngày tháng
+
+// Tạo ngày tháng được cắt từ chuổi nhập vào    
 void Create(DATE &d, string &st) {
     char c[4];
         
     c[0]= st[0];
     c[1] = st[1];
-    d.day = atoi(c);    // L?y du?c 2 gi� tr? d?u ti�n c?a chu?i nh?p g�n cho ng�y (L?y gi� tr? 1 2)
+    d.day = atoi(c);    // Lấy được 2 giá trá đầu tiên của chuỗi nhập gán cho ngày (Lấy giá trị 1 2)
         
     c[0]= st[3];
     c[1] = st[4];
-    d.month = atoi(c);  // L?y du?c 2 gi� tr? ti?p theo c?a chu?i nh?p g�n cho th�ng (L?y gi� tr? 3 4)
+    d.month = atoi(c);  // Lấy được 2 giá trị tiếp theo của chuỗi nhập gán cho tháng (Lấy giá trị 3 4)
         
     c[0] = st[6];
     c[1] = st[7];
     c[2] = st[8];
     c[3] = st[9];
-    d.year = atoi(c);   // L?y du?c 4 gi� tr? cu?i c�ng c?a chu?i nh?p g�n cho nam (L?y gi� tr? 6 7 8 9)
+    d.year = atoi(c);   // Lấy được 4 giá trị cuôii cùng của chuỗi nhập gán cho nam (Lấy giá trị 6 7 8 9)
 }
     
-// H�m in ng�y th�ng ra m�n h�nh
-void printDate(int n, int sum){
+// In ngày tháng ra màn hình
+void printDate(int n, int sum) {
     int i = 0;
     while(sum > Month[i]) {
         sum = sum - Month[i];
@@ -44,14 +51,14 @@ void printDate(int n, int sum){
     cout << "Ngay " << sum << " thang " << i << " nam " << n << endl;
 }
     
-// H�m ki?m tra nam c� ph?i l� nhu?n hay kh�ng
+// Kiểm tra năm có phải là nhuận hay không
 int checkYear(DATE y) {
     if ((y.year % 4 == 0 && y.year % 100 != 0) || y.year % 400 == 0)
         return 1;
     return 0;
 }
     
-// H�m t�nh s? ng�y trong nam
+// Tính số ngày trong năm
 int calculateDayInYear(DATE n) {
     int item = 0;
         
@@ -64,8 +71,8 @@ int calculateDayInYear(DATE n) {
     return item;
 }
     
-// H�m c?ng ng�y th�ng
-void addDate(DATE n, int tmp) {
+// Cộng ngày tháng
+void sumDate(DATE n, int tmp) {
     int res = 0;
     res = calculateDayInYear(n) + tmp;
         
@@ -92,7 +99,7 @@ void addDate(DATE n, int tmp) {
     }
 }
     
-// H�m tr? ng�y th�ng
+// Trừ ngày tháng
 void subDate(DATE n, int tmp) {
     int res = calculateDayInYear(n);
     if(res > tmp) {
@@ -123,11 +130,11 @@ void subDate(DATE n, int tmp) {
     }
 }
     
-// H�m ch�nh
+// Chương trình chính
 int main() {
     DATE d;
     string st;
-    int add, sub;
+    int sum, sub;
         
     cout << "Nhap chuoi ngay thang: ";
     getline(cin, st);
@@ -146,10 +153,10 @@ int main() {
     cout << "----------------" << endl;
         
     cout << "Nhap so cong: ";
-    cin >> add;
+    cin >> sum;
     cout << "----------------" << endl;
     cout << "Ngay thang sau khi cong: ";
-    addDate(d, add); 
+    sumDate(d, sum); 
         
     cout << "----------------" << endl;
         

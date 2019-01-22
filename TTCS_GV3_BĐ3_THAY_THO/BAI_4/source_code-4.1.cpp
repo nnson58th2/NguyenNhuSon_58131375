@@ -4,29 +4,43 @@
 
 using namespace std;
 
-// Khai b�o c?u tr�c luu bi?n
+// Khai báo dữ liệu cấu trúc lưu biến
 struct saveVariable {
-	int name;   // T�n
-	int sum;    // T?ng
-	int flag;   // C�i c?
+	int name;   // Tên
+	int sum;    // Tổng
+	int flag;   // Cái cờ (đánh dấu)
 };
 
-void ImportTheGraph(int a[10][10], int &n);  // H�m nh?p d? th?
-void writeTheGraph(int a[10][10], int &n);   // H�m xu?t d? thi ra file
-void readTheGraph(int a[10][10], int &n);    // H�m d?c d? th? t? file
-void showTheGraph(int a[10][10], int n);    // H�m hi?n th? ma tr?n
-void Compare(saveVariable &vc, saveVariable &vp); // H�m so s�nh ki?m tra bi?n
-void Browser(saveVariable vc[10], int &index, int n);   // H�m duy?t ma tr?n ch?n di?m c� t?ng nh? nh?t
-void Router(saveVariable a[10], int x, int y); // H�m hi?n th? ra du?ng di ng?n nh?t t? m?ng ma tr?n
-void findTheWay(int a[10][10], int n);  // H�m t�m du?ng di ng?n nh?t
-int main(); // H�m ch�nh
+void ImportTheGraph(int a[10][10], int &n);  // Hàm nhập đồ thi ma trận từ bàn phím
+void writeTheGraph(int a[10][10], int &n);   // Hàm xuất đồ thị ma trận ra file
+void readTheGraph(int a[10][10], int &n);    // Hàm đọc đồ thị ma trận từ file
+void showTheGraph(int a[10][10], int n);    // Hàm hiển thị đồ thị ma trận
+void Compare(saveVariable &vc, saveVariable &vp); // Hàm so sánh kiểm tra biến
+void Browser(saveVariable vc[10], int &index, int n);   // Hàm duyệt ma trận chọn diểm có tổng nhỏ nhất
+void Router(saveVariable a[10], int x, int y); // Hàm hiển thị ra đường đi ngắn nhất từ mảng ma trận
+void findTheWay(int a[10][10], int n);  // Hàm tìm đường đi ngắn nhất
 
 fstream fi;
 
-// H�m nh?p d? thi c� d?ng ma tr?n
+// Chương trình chính
+int main(){
+	int a[10][10];
+    int n;
+	
+//	ImportTheGraph(a, n);
+//	writeTheGraph(a, n);
+
+	readTheGraph(a, n);
+	showTheGraph(a, n);
+	cout << "------------" << endl;
+	findTheWay(a, n);
+}
+
+// Nhập đồ thị ma trận từ bàn phím
 void ImportTheGraph(int a[10][10], int &n) {
 	cout << "Nhap so dinh: ";
 	cin >> n;
+
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
 			cout << "Nhap A[" << i << "][" << j << "]: ";
@@ -35,11 +49,12 @@ void ImportTheGraph(int a[10][10], int &n) {
 	}
 }
 
-// Ghi ma tr?n v�o trong file
+// Ghi ma trận vào trong file
 void writeTheGraph(int a[10][10], int &n) {
 	fi.open("du_lieu/do_thi.txt", ios::out);
 	fi << n;
 	fi << endl;
+
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++)
 			fi << a[i][j] << " ";
@@ -48,17 +63,18 @@ void writeTheGraph(int a[10][10], int &n) {
 	fi.close();
 }
 
-// �?c ma tr?n trong file ra m?ng
+// Đọc ma trận trong file ra mảng
 void readTheGraph(int a[10][10], int &n) {
 	fi.open("du_lieu/do_thi.txt", ios::in);
 	fi >> n;
+
 	for(int i = 0; i < n; i++)
 		for(int j = 0; j < n; j++)
 			fi >> a[i][j];
 	fi.close();
 }
 
-// Xu?t m?ng ma tr?n
+// Xuất mảng ma trận ra màn hình
 void showTheGraph(int a[10][10], int n) {
 	for (int i = 0; i < n; i++){
 		for (int j = 0; j < n; j++)
@@ -67,7 +83,7 @@ void showTheGraph(int a[10][10], int n) {
 	}		
 }
 
-// H�m ki?m tra di?u ki?n - g�n bi?n ph? cho bi?n ch�nh
+// Hàm kiểm tra (so sánh) điều kiện - gán biến phụ cho biến chính 
 void Compare(saveVariable &vc, saveVariable &vp) {
 	if (vc.flag != 1) {
 		if (vc.sum == 0) {
@@ -82,7 +98,7 @@ void Compare(saveVariable &vc, saveVariable &vp) {
 	}
 }
 
-// Ch?n di?m c� t?ng nh? nh?t v� d?ng c? l�n
+// Chọn điểm có tổng nhỏ nhất và dựng cờ lên
 void Browser(saveVariable vc[10], int &index, int n) {
 	int print = 1000;
 	
@@ -94,10 +110,10 @@ void Browser(saveVariable vc[10], int &index, int n) {
 			}
 		}
 	}
-	vc[index].flag = 1;	// Tr? v? gi� tr? h�ng cho l?n duy?t ma tr?n ti?p theo
+	vc[index].flag = 1;	// Trả về giá trị hàng cho lần duyệt ma trận tiếp theo
 }
 
-// Hi?n th? ra l? tr�nh du?ng di ng?n nh?t t? m?ng ma tr?n (saveVariable)
+// Hiển thi ra lộ trình đường đi ngắn nhất từ mảng ma trận (saveVariable)
 void Router(saveVariable a[10], int x, int y){
 	cout << "Do dai duong di ngan nhat: " << a[y].sum << endl;
 	cout << "lo trinh:  " << y;
@@ -108,16 +124,16 @@ void Router(saveVariable a[10], int x, int y){
 	}
 }
 
-// T�m du?ng di ng?n nh?t
+// Tìm đường đi ngắn nhất
 void findTheWay(int a[10][10], int n) {
 	saveVariable vc[n];
 	saveVariable vp;
 	
     int start, end;
     
-    vp.flag = 0;    // C? n?m
+    vp.flag = 0;    // Cờ nằm
 	
-	// Kh?i t?o cho h�ng d?u ti�n
+    // Khởi tạo cho hàng đầu tiên
 	for (int i = 0; i < n; i++) {
 		vc[i].name = 0;
 		vc[i].sum = 0;
@@ -131,54 +147,40 @@ void findTheWay(int a[10][10], int n) {
     cout << "--------------------------" << endl;
 	cout << "Qua trinh thay doi gia tri" << endl;
 	
-	int itemS = start;	// V? tr� b?t d?u
-	int itemE = end;	// V? tr� k?t th�c
-	int i = itemS;	// �?c ma tr?n t? h�ng d?u(itemS) - V? tr� b?t d?u t�m du?ng
+	int itemS = start;	// Vị trí bắt đầu
+	int itemE = end;	// Vị trí kết thúc
+	int i = itemS;	// Đọc ma trận từ hàng đầu (itemS) - Vị trí bắt đầu tìm đường
 	
-    // B?t c? , d�nh d?u v? tr� ban d?u
+    // Bật cờ, đánh dấu vị trí ban đầu
 	vc[itemS].flag = 1;
 	
 	do {
 		for (int j = 0; j < n; j++) {
-            // G�n cho bi?n ph? c�i t�n v� gi� tr? t?ng
+            // Gán cho biến phụ cái tên và giá trị tổng cho nó
 			if (a[i][j] != 0) {
 				vp.name = itemS;
 				vp.sum = a[i][j] + vc[itemS].sum;
 			} else {
-                // X? l� gi� tr? c?a ma tr?n t?i h�ng i c?t j khi gi� tr? b?ng 0
+                // Xử lý giá trị của ma trận tại hàng i cột j khi giá trị bằng 0
 				vp.name = 0;
 				vp.sum = 0;
 			}
             Compare(vc[j], vp);
         }
-        // Xu?t ra qu� tr�nh thay d?i gi� tr? c?a m?ng vc 
+        // Xuất ra quá trình thay đổi giá trị của mảng vc 
         for (int k = 0; k < n; k++) {
             cout << vc[k].name << "," << vc[k].sum << "\t";
         }
         cout << endl;
         
-        // ��nh d?u l?i v? tr� d� di qua
+        // Đánh dấu lại vị trí đã đi qua
         Browser(vc, itemS, n);
         
-        i = itemS; // �ua i d?n h�ng ti?p theo d? d?c ti?p ma tr?n	
+        i = itemS; // Đưa i đến hàng tiếp theo để đọc tiếp ma trận
 	} while(itemS != itemE);
 	
 	cout << "--------------------------------------------" << endl;
 
-    // Hi?n th? ra l? tr�nh du?ng di
+    // Hiển thị ra lộ trình đường đi
 	Router(vc, start, end);
-}
-
-// H�m ch�nh
-int main(){
-	int a[10][10];
-    int n;
-	
-//	ImportTheGraph(a, n);
-//	writeTheGraph(a, n);
-
-	readTheGraph(a, n);
-	showTheGraph(a, n);
-	cout << "------------" << endl;
-	findTheWay(a, n);
 }

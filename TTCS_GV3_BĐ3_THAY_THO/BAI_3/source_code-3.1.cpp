@@ -9,14 +9,21 @@ using namespace std;
 fstream fi;
 fstream go;
 
-bool getAnswer(string a, string b); // H�m ki?m tra k?t qu?
-void saveScores(int scores);    // H�m luu di?m ngu?i thi
-void openQuestion();    // H�m m? c�u h?i b? d?
-void showScores();  // H�m hi?n th? di?m c?a ngu?i thi
-void choiseThreads();   // H�m ch?n 1 b? d? trong c�c b? d?
-int main(); // H�m ch�nh
+bool getAnswer(string a, string b); // Hàm kiểm tra kết quả
+void saveScores(int scores);    // Hàm lưu điểm người thi
+void openQuestion();    // Hàm mở câu hỏi bộ đề
+void showScores();  // Hàm hiển thị điểm của người thi
+void choiseThreads();   // Hàm chọn 1 bộ đề trong các bộ đề
+bool returnToMenu();    // Hàm quay lại menu để chọn tiếp
+void showMenu();    // Hàm hiển thị menu ra màn hình
+void choiseQuestion();  // Hàm chọn bộ đề câu hỏi
 
-// H�m ki?m tra c�u h?i
+// Chương trình chính
+int main(){
+	choiseQuestion();
+}
+
+// Kiếm tra kết quả
 bool getAnswer(string a, string b){
 	if (a.compare(b) == 0)
 		return true;
@@ -24,8 +31,8 @@ bool getAnswer(string a, string b){
 		return false;
 }
 
-// H�m luu di?m | 5 di?m/c�u h?i
-void saveScores(int scores){
+// Lưu điểm | 5 diểm/câu hỏi
+void saveScores(int scores) {
 	int x;
 	
 	do {
@@ -35,7 +42,7 @@ void saveScores(int scores){
 			cout << "Reselect > " << endl;
 	} while(x < 0 || x > 2);
 	
-    // N?u ngu?i thi ch?n luu th� di?u ki?n m?i th?c hi?n
+    // Nếu người thi chọn lưu thì điều kiện mới thực hiện
 	if (x == 1){
 		string s;
 		cout << endl << "Enter name save scores: ";
@@ -48,8 +55,8 @@ void saveScores(int scores){
 	}
 }
 
-// H�m m? c�u h?i trong b? d?
-void openQuestion(){
+// Mở câu hỏi trong bộ đề
+void openQuestion() {
 	string s;
 	string x;
 	int scores = 0;
@@ -58,32 +65,34 @@ void openQuestion(){
 	cout << s << endl;
 	getline(fi, s);
 	for (int i = atoi(s.c_str()); i > 0; i--){
-		getline(fi, s);		// C�u h?i
+		getline(fi, s);		// Câu hỏi
 		cout << s << endl;
-		getline(fi, s);		// ��p �n A
+		getline(fi, s);		// Ðáp án A
 		cout << s << endl;
-		getline(fi, s);		// ��p �n B 
+		getline(fi, s);		// Ðáp án B 
 		cout << s << endl;
-		getline(fi, s);		// ��p �n C 
+		getline(fi, s);		// Ðáp án C 
 		cout << s << endl;
-		getline(fi, s);		// ��p �n d�ng
+		getline(fi, s);		// Ðáp án đúng
 		cout << "Cau tra loi la: ";
 		fflush(stdin);
-		getline(cin, x);	// ��p �n ngu?i thi 
+		getline(cin, x);	// Ðáp án người thi 
 		cout << endl;
 		
-        // Ki?m tra d�p �n d�ng v?i d�p �n ngu?i thi r?i c?ng di?m
+        // Kiểm tra đáp án đúng với đáp án người thi rồi cộng điểm
 		if (getAnswer(s, x) == true)
 			scores += 5;
 	}
+
 	cout << "Hoan thanh bai kiem tra!" << endl << endl;
 	cout << "Diem so la: " << scores << endl << endl;
 	saveScores(scores);	
 }
 
-// Hi?n th? di?m c?a ngu?i choi trong file Luu_diem.txt
-void showScores(){
+// Hiển thị điểm của người chơi trong file Luu_diem.txt
+void showScores() {
 	string s;
+
 	go.open("du_lieu/diem/luu_diem.txt", ios::in);
 	cout << "Diem nguoi choi la:" << endl;
 	getline(go, s);
@@ -94,8 +103,8 @@ void showScores(){
 	go.close();
 }
 
-// Quay l?i menu d? ch?n ti?p
-bool returnToMenu(){
+// Quay lại menu để chọn tiếp
+bool returnToMenu() {
 	char rtnMenu;
 	cout << "-----------------------------" << endl;
     cout << "Enter z to return to the menu:> "; 
@@ -106,19 +115,19 @@ bool returnToMenu(){
     } return false;
 }
 
-// Hi?n th? menu ch?n b? d? v� xem di?m ngu?i choi
+// Hiển thị menu chọn bộ đề, xem điểm người thi và thoát chương trình
 void showMenu() {
 	cout << "Nhap bo de tuong ung voi 1, 2, 3 | Chon 4 de xem diem da luu!" << endl;	
 	cout << "1. Bo de 1" << endl;
 	cout << "2. Bo de 2" << endl;
 	cout << "3. Bo de 3" << endl;
 	cout << "4. Xem diem" << endl;
-    cout << "5. Tho�t" << endl;
+    cout << "5. Thoat" << endl;
 	cout << "Enter:> ";
 }
 
-// Ch?n 1 b? d? trong c�c b? d?
-void choiseQuestion(){
+// Chọn 1 bộ đề trong các bộ đề
+void choiseQuestion() {
 	int x;
 	
 	do {
@@ -133,7 +142,7 @@ void choiseQuestion(){
 		case 1:
 			system("cls");
 			fi.open("du_lieu/bo_de/de_1.txt", ios::in);
-			openQuestion(); // M? b? d? 1
+			openQuestion(); // Mở bộ đề số 1
 			fi.close();
 			
 			if (returnToMenu()) {
@@ -146,7 +155,7 @@ void choiseQuestion(){
 		case 2:
 			system("cls");
 			fi.open("du_lieu/bo_de/de_2.txt", ios::in);
-			openQuestion(); // M? b? d? 2
+			openQuestion(); // Mở bộ đề số 2
 			fi.close();
 			
 			if (returnToMenu()) {
@@ -159,7 +168,7 @@ void choiseQuestion(){
 		case 3:
 			system("cls");
 			fi.open("du_lieu/bo_de/de_3.txt", ios::in);
-			openQuestion(); // M? b? d? 3
+			openQuestion(); // Mở bộ đề số 3
 			fi.close();
 			
 			if (returnToMenu()) {
@@ -171,7 +180,7 @@ void choiseQuestion(){
 			break;
 		case 4:
 			system("cls");
-			showScores();
+			showScores();   // Hiển thị điểm tất cả người thi
 			
 			if (returnToMenu()) {
                 system("cls");
@@ -196,9 +205,4 @@ void choiseQuestion(){
             }
 			break;
 	}
-}
-
-// H�m ch�nh
-int main(){
-	choiseQuestion();
 }

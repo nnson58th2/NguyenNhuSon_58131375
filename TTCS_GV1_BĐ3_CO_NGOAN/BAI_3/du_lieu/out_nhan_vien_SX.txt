@@ -1,0 +1,20 @@
+Nhan vien san xuat 1
+Ho ten: Vy
+Gioi tinh: Nam
+Ngay lam viec: 02.06.2016
+So con: 0
+So san pham: 15
+Tien thuong: 300
+Tien tro cap: 0
+Tien luong: 30300
+----------------------------
+Nhan vien san xuat 2
+Ho ten: Hoa
+Gioi tinh: Nu
+Ngay lam viec: 12.11.2016
+So con: 2
+So san pham: 12
+Tien thuong: 120
+Tien tro cap: 240000
+Tien luong: 24120
+----------------------------
